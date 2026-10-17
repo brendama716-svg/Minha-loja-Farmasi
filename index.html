@@ -11,20 +11,20 @@
   <!-- Cabeçalho -->
   <header class="header">
     <h1>🛍️ Loja Farmasi</h1>
-    <p>Beleza, Cuidado e Bem-estar</p>
+    <p>Beleza, Cuidado e Gestão</p>
   </header>
 
-  <!-- Menu de Navegação Superior -->
+  <!-- Menu de Abas Independentes -->
   <nav class="nav-bar">
     <button class="nav-btn active" onclick="mudarAba('catalogo')">🛒 Catálogo</button>
     <button class="nav-btn" onclick="mudarAba('clientes')">👥 Clientes</button>
     <button class="nav-btn" onclick="mudarAba('admin')">⚙️ Gestão / Admin</button>
   </nav>
 
-  <!-- CONTEÚDO: CATÁLOGO -->
-  <div id="aba-catalogo" class="container">
+  <!-- ================= ABA 1: CATÁLOGO ================= -->
+  <div id="aba-catalogo" class="pagina-conteudo ativa">
     <div class="categorias-scroll" id="lista-categorias">
-      <!-- Categorias dinâmicas injetadas via JS -->
+      <!-- Categorias dinâmicas -->
     </div>
 
     <h2 class="section-title" id="titulo-categoria">Todos os Produtos</h2>
@@ -33,10 +33,10 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO: CLIENTES & HISTÓRICO VITALÍCIO -->
-  <div id="aba-clientes" class="container hidden">
-    <div class="client-panel">
-      <h2 class="section-title">Cadastrar Novo Cliente</h2>
+  <!-- ================= ABA 2: CLIENTES ================= -->
+  <div id="aba-clientes" class="pagina-conteudo">
+    <div class="panel">
+      <h2 class="section-title">➕ Cadastrar Novo Cliente</h2>
       <div class="form-group">
         <label>Nome Completo:</label>
         <input type="text" id="cli-nome" placeholder="Ex: Maria Silva">
@@ -52,42 +52,56 @@
       <button class="btn-primary" onclick="salvarCliente()">Salvar Cliente</button>
     </div>
 
-    <div class="client-panel">
-      <h2 class="section-title">Lista de Clientes & Histórico</h2>
+    <div class="panel">
+      <h2 class="section-title">📋 Lista de Clientes & Histórico Vitalício</h2>
       <div id="lista-clientes-container">
         <!-- Clientes listados aqui -->
       </div>
     </div>
   </div>
 
-  <!-- CONTEÚDO: GESTÃO / ADMIN (PRODUTOS & CATEGORIAS) -->
-  <div id="aba-admin" class="container hidden">
-    <div class="admin-panel">
-      <h2 class="section-title">Gerir Categorias</h2>
+  <!-- ================= ABA 3: ADMIN / GESTÃO ================= -->
+  <div id="aba-admin" class="pagina-conteudo">
+    <!-- Gerir Categorias -->
+    <div class="panel">
+      <h2 class="section-title">🏷️ Gerir Categorias</h2>
       <div class="form-group">
         <label>Nova Categoria:</label>
-        <input type="text" id="nova-cat-nome" placeholder="Ex: Perfume">
+        <input type="text" id="nova-cat-nome" placeholder="Ex: Maquiagem, Cuidados com a Pele, Perfume">
       </div>
       <button class="btn-primary" onclick="adicionarCategoria()">Adicionar Categoria</button>
     </div>
 
-    <div class="admin-panel">
-      <h2 class="section-title">Adicionar Produto</h2>
+    <!-- Cadastrar Produto com Foto e Preços Editáveis -->
+    <div class="panel">
+      <h2 class="section-title">📦 Cadastrar Novo Produto</h2>
       <div class="form-group">
         <label>Nome do Produto:</label>
-        <input type="text" id="prod-nome" placeholder="Ex: Batom Matte">
+        <input type="text" id="prod-nome" placeholder="Ex: Batom Líquido Matte">
       </div>
       <div class="form-group">
         <label>Categoria:</label>
         <select id="prod-cat">
-          <!-- Opções preenchidas via JS -->
+          <!-- Categorias preenchidas via JS -->
         </select>
       </div>
       <div class="form-group">
-        <label>Preço (R$):</label>
-        <input type="number" id="prod-preco" placeholder="65.00">
+        <label>Link da Foto (URL):</label>
+        <input type="text" id="prod-foto" placeholder="https://exemplo.com/foto.jpg">
       </div>
-      <button class="btn-primary" onclick="adicionarProduto()">Salvar Produto</button>
+      <div class="form-group">
+        <label>Descrição:</label>
+        <textarea id="prod-desc" rows="2" placeholder="Breve descrição do produto..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Valor de Compra (R$):</label>
+        <input type="number" id="prod-compra" placeholder="45.00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>Valor de Venda (R$):</label>
+        <input type="number" id="prod-venda" placeholder="65.00" step="0.01">
+      </div>
+      <button class="btn-primary" onclick="adicionarProduto()">Salvar Produto no Catálogo</button>
     </div>
   </div>
 
