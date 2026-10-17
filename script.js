@@ -12,28 +12,39 @@ let categoriaAtiva = 'Todos';
 
 // Sistema de Abas Independentes
 function mudarAba(aba) {
-  document.querySelectorAll('.pagina-tab').forEach(el => el.classList.remove('ativa'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  // Ocultar todas as abas
+  document.querySelectorAll('.pagina-tab').forEach(el => {
+    el.classList.remove('ativa');
+  });
+  
+  // Remover classe active de todos os botões
+  document.querySelectorAll('.nav-btn').forEach(el => {
+    el.classList.remove('active');
+  });
 
+  // Mostrar a aba selecionada
+  const abaAlvo = document.getElementById(`aba-${aba}`);
+  const botaoAlvo = document.getElementById(`btn-${aba}`);
+
+  if (abaAlvo) abaAlvo.classList.add('ativa');
+  if (botaoAlvo) botaoAlvo.classList.add('active');
+
+  // Executar renderizações específicas
   if (aba === 'catalogo') {
-    document.getElementById('aba-catalogo').classList.add('ativa');
-    document.getElementById('btn-catalogo').classList.add('active');
     renderizarCatalogo();
   } else if (aba === 'clientes') {
-    document.getElementById('aba-clientes').classList.add('ativa');
-    document.getElementById('btn-clientes').classList.add('active');
     renderizarClientes();
   } else if (aba === 'admin') {
-    document.getElementById('aba-admin').classList.add('ativa');
-    document.getElementById('btn-admin').classList.add('active');
     atualizarSelectCategorias();
     renderizarGestaoPrecos();
   }
 }
 
-// --- CATÁLOGO (Apenas Preço de Venda limpo, sem botões de edição para o cliente) ---
+// --- CATÁLOGO (Apenas Preço de Venda limpo) ---
 function renderizarCatalogo() {
   const containerCat = document.getElementById('lista-categorias');
+  if (!containerCat) return;
+
   let htmlCat = `<div class="cat-chip ${categoriaAtiva === 'Todos' ? 'selected' : ''}" onclick="filtrarCategoria('Todos')">🌐 Todos</div>`;
   
   categorias.forEach(cat => {
@@ -84,6 +95,7 @@ function calcularLucroPreview() {
   const compra = parseFloat(document.getElementById('prod-compra').value) || 0;
   const venda = parseFloat(document.getElementById('prod-venda').value) || 0;
   const previewBox = document.getElementById('lucro-preview-box');
+  if (!previewBox) return;
 
   if (compra <= 0 || venda <= 0 || venda < compra) {
     previewBox.innerHTML = `💡 Margem de Lucro Estimada: R$ 0,00 (0.0%)`;
@@ -98,6 +110,8 @@ function calcularLucroPreview() {
 // --- GESTÃO INTERNA DE PREÇOS (Admin: Compra e Venda com Lápis ✏️) ---
 function renderizarGestaoPrecos() {
   const container = document.getElementById('lista-gestao-precos');
+  if (!container) return;
+
   if (produtos.length === 0) {
     container.innerHTML = '<p style="color:#777; text-align:center;">Nenhum produto cadastrado.</p>';
     return;
@@ -164,6 +178,7 @@ function adicionarCategoria() {
 
 function atualizarSelectCategorias() {
   const select = document.getElementById('prod-cat');
+  if (!select) return;
   let html = '';
   categorias.forEach(cat => {
     html += `<option value="${cat}">${cat}</option>`;
@@ -237,6 +252,8 @@ function salvarCliente() {
 
 function renderizarClientes() {
   const container = document.getElementById('lista-clientes-container');
+  if (!container) return;
+
   if (clientes.length === 0) {
     container.innerHTML = '<p style="color:#777; text-align:center;">Nenhum cliente cadastrado ainda.</p>';
     return;
@@ -307,5 +324,5 @@ function adicionarCompra(cliId) {
   renderizarClientes();
 }
 
-// Inicializar carregamento padrão
-renderizarCatalogo();
+// Inicializar aba padrão ao carregar
+mudarAba('catalogo');
