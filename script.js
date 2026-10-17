@@ -1,48 +1,21 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loja Farmasi</title>
-  <link rel="stylesheet" href="estilo.css">
-</head>
-<body>
+function mudarAba(aba) {
+  // Esconde todas as abas
+  document.querySelectorAll('.pagina-tab').forEach(el => {
+    el.classList.remove('ativa');
+  });
 
-  <header class="header">
-    <h1>🛍️ Loja Farmasi</h1>
-  </header>
+  // Remove o destaque de todos os botões
+  document.querySelectorAll('.nav-btn').forEach(el => {
+    el.classList.remove('active');
+  });
 
-  <!-- Menu de Abas -->
-  <nav class="nav-bar">
-    <button id="btn-catalogo" class="nav-btn active" onclick="mudarAba('catalogo')">🛒 Catálogo</button>
-    <button id="btn-clientes" class="nav-btn" onclick="mudarAba('clientes')">👥 Clientes</button>
-    <button id="btn-admin" class="nav-btn" onclick="mudarAba('admin')">⚙️ Admin</button>
-  </nav>
+  // Ativa a aba e o botão correspondente
+  const abaAlvo = document.getElementById(`aba-${aba}`);
+  const botaoAlvo = document.getElementById(`btn-${aba}`);
 
-  <!-- ABA 1: CATÁLOGO -->
-  <div id="aba-catalogo" class="pagina-tab ativa">
-    <div class="panel">
-      <h2>Catálogo de Produtos</h2>
-      <p>O catálogo aparecerá aqui em breve.</p>
-    </div>
-  </div>
+  if (abaAlvo) abaAlvo.classList.add('ativa');
+  if (botaoAlvo) botaoAlvo.classList.add('active');
+}
 
-  <!-- ABA 2: CLIENTES -->
-  <div id="aba-clientes" class="pagina-tab">
-    <div class="panel">
-      <h2>Painel de Clientes</h2>
-      <p>O cadastro de clientes aparecerá aqui.</p>
-    </div>
-  </div>
-
-  <!-- ABA 3: ADMIN -->
-  <div id="aba-admin" class="pagina-tab">
-    <div class="panel">
-      <h2>Painel Administrativo</h2>
-      <p>As configurações de produtos aparecerão aqui.</p>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+// Inicializa na aba catálogo
+mudarAba('catalogo');
