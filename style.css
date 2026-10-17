@@ -40,7 +40,7 @@ body {
   opacity: 0.9;
 }
 
-/* Navigation Menu */
+/* Menu de Abas */
 .nav-bar {
   display: flex;
   justify-content: space-around;
@@ -69,16 +69,17 @@ body {
   color: var(--primary);
 }
 
-/* Abas Independentes */
+/* Abas Independentes (Ocultas por padrão) */
 .pagina-tab {
-  display: none;
+  display: none !important;
   max-width: 900px;
   margin: 20px auto;
   padding: 0 15px;
 }
 
+/* Apenas a aba com a classe 'ativa' aparece */
 .pagina-tab.ativa {
-  display: block;
+  display: block !important;
 }
 
 /* Categorias Scroll */
