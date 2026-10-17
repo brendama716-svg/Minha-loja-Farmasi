@@ -12,25 +12,26 @@ let categoriaAtiva = 'Todos';
 
 // Sistema de Abas Independentes
 function mudarAba(aba) {
-  document.querySelectorAll('.pagina-conteudo').forEach(el => el.classList.remove('ativa'));
+  document.querySelectorAll('.pagina-tab').forEach(el => el.classList.remove('ativa'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
   if (aba === 'catalogo') {
     document.getElementById('aba-catalogo').classList.add('ativa');
-    event.currentTarget.classList.add('active');
+    document.getElementById('btn-catalogo').classList.add('active');
     renderizarCatalogo();
   } else if (aba === 'clientes') {
     document.getElementById('aba-clientes').classList.add('ativa');
-    event.currentTarget.classList.add('active');
+    document.getElementById('btn-clientes').classList.add('active');
     renderizarClientes();
   } else if (aba === 'admin') {
     document.getElementById('aba-admin').classList.add('ativa');
-    event.currentTarget.classList.add('active');
+    document.getElementById('btn-admin').classList.add('active');
     atualizarSelectCategorias();
+    renderizarGestaoPrecos();
   }
 }
 
-// --- CATÁLOGO & EDIÇÃO DE PREÇOS (COM SÍMBOLO DE LÁPIS ✏️) ---
+// --- CATÁLOGO (Apenas Preço de Venda limpo, sem botões de edição para o cliente) ---
 function renderizarCatalogo() {
   const containerCat = document.getElementById('lista-categorias');
   let htmlCat = `<div class="cat-chip ${categoriaAtiva === 'Todos' ? 'selected' : ''}" onclick="filtrarCategoria('Todos')">🌐 Todos</div>`;
@@ -41,7 +42,7 @@ function renderizarCatalogo() {
   containerCat.innerHTML = htmlCat;
 
   const containerProd = document.getElementById('produtos');
-  document.getElementById('titulo-categoria찧' in window ? '' : 'titulo-categoria').innerText = categoriaAtiva === 'Todos' ? 'Todos os Produtos' : categoriaAtiva;
+  document.getElementById('titulo-categoria').innerText = categoriaAtiva === 'Todos' ? 'Todos os Produtos' : categoriaAtiva;
   
   let produtosFiltrados = categoriaAtiva === 'Todos' ? produtos : produtos.filter(p => p.categoria === categoriaAtiva);
 
@@ -62,13 +63,8 @@ function renderizarCatalogo() {
           <p class="desc">${p.desc || 'Sem descrição.'}</p>
           
           <div class="preco-box">
-            <span>Compra: R$ ${Number(p.precoCompra).toFixed(2)}</span>
-            <button class="btn-editar-preco" onclick="editarPreco(${p.id}, 'compra')" title="Editar Valor de Compra">✏️</button>
-          </div>
-          <div class="preco-box">
-            <span>Venda:</span>
+            <span>Preço:</span>
             <span class="preco-valor">R$ ${Number(p.precoVenda).toFixed(2)}</span>
-            <button class="btn-editar-preco" onclick="editarPreco(${p.id}, 'venda')" title="Editar Valor de Venda">✏️</button>
           </div>
         </div>
         <button class="btn-comprar" onclick="comprarProduto('${p.nome}', ${p.precoVenda})">💬 Pedir via WhatsApp</button>
@@ -83,12 +79,58 @@ function filtrarCategoria(cat) {
   renderizarCatalogo();
 }
 
-// Função para editar valores com o ícone de lápis
-function editarPreco(id, tipo) {
+// --- CÁLCULO AUTOMÁTICO DA MARGEM DE LUCRO AO CADASTRAR ---
+function calcularLucroPreview() {
+  const compra = parseFloat(document.getElementById('prod-compra').value) || 0;
+  const venda = parseFloat(document.getElementById('prod-venda').value) || 0;
+  const previewBox = document.getElementById('lucro-preview-box');
+
+  if (compra <= 0 || venda <= 0 || venda < compra) {
+    previewBox.innerHTML = `💡 Margem de Lucro Estimada: R$ 0,00 (0.0%)`;
+    return;
+  }
+
+  const lucroReais = venda - compra;
+  const lucroPorcento = (lucroReais / compra) * 100;
+  previewBox.innerHTML = `💡 Margem de Lucro Estimada: R$ ${lucroReais.toFixed(2)} (${lucroPorcento.toFixed(1)}%)`;
+}
+
+// --- GESTÃO INTERNA DE PREÇOS (Admin: Compra e Venda com Lápis ✏️) ---
+function renderizarGestaoPrecos() {
+  const container = document.getElementById('lista-gestao-precos');
+  if (produtos.length === 0) {
+    container.innerHTML = '<p style="color:#777; text-align:center;">Nenhum produto cadastrado.</p>';
+    return;
+  }
+
+  let html = '';
+  produtos.forEach(p => {
+    let lucroR = p.precoVenda - p.precoCompra;
+    let lucroP = p.precoCompra > 0 ? (lucroR / p.precoCompra) * 100 : 0;
+
+    html += `
+      <div class="list-item" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>${p.nome}</strong>
+          <div style="font-size: 0.8rem; color: #555; margin-top: 3px;">
+            Compra: <b>R$ ${Number(p.precoCompra).toFixed(2)}</b> <button class="btn-editar" onclick="editarCusto(${p.id}, 'compra')">✏️</button> | 
+            Venda: <b>R$ ${Number(p.precoVenda).toFixed(2)}</b> <button class="btn-editar" onclick="editarCusto(${p.id}, 'venda')">✏️</button>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--primary-dark); font-weight: 600; margin-top: 2px;">
+            Lucro: R$ ${lucroR.toFixed(2)} (${lucroP.toFixed(1)}%)
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function editarCusto(id, tipo) {
   const produto = produtos.find(p => p.id === id);
   if (!produto) return;
 
-  const titulo = tipo === 'compra' ? 'Novo Valor de Compra (R$):' : 'Novo Valor de Venda (R$):';
+  const titulo = tipo === 'compra' ? `Novo Valor de Compra para ${produto.nome}:` : `Novo Valor de Venda para ${produto.nome}:`;
   const valorAtual = tipo === 'compra' ? produto.precoCompra : produto.precoVenda;
 
   const novoValor = prompt(titulo, valorAtual);
@@ -104,8 +146,8 @@ function editarPreco(id, tipo) {
   }
 
   localStorage.setItem('farmasi_prods', JSON.stringify(produtos));
-  renderizarCatalogo();
-  alert('Preço atualizado com sucesso!');
+  renderizarGestaoPrecos();
+  alert('Valor atualizado com sucesso!');
 }
 
 function adicionarCategoria() {
@@ -153,12 +195,12 @@ function adicionarProduto() {
 
   localStorage.setItem('farmasi_prods', JSON.stringify(produtos));
   
-  // Limpar formulário
   document.getElementById('prod-nome').value = '';
   document.getElementById('prod-foto').value = '';
   document.getElementById('prod-desc').value = '';
   document.getElementById('prod-compra').value = '';
   document.getElementById('prod-venda').value = '';
+  document.getElementById('lucro-preview-box').innerHTML = `💡 Margem de Lucro Estimada: R$ 0,00 (0.0%)`;
 
   alert('Produto cadastrado com sucesso!');
   mudarAba('catalogo');
