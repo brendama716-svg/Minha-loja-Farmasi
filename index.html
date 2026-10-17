@@ -11,21 +11,85 @@
   <!-- Cabeçalho -->
   <header class="header">
     <h1>🛍️ Loja Farmasi</h1>
-    <p>Seus produtos favoritos a um toque de distância!</p>
+    <p>Beleza, Cuidado e Bem-estar</p>
   </header>
 
-  <!-- Seção de Produtos -->
-  <main class="container">
-    <h2>Catálogo de Produtos</h2>
-    <div id="produtos" class="grid-produtos">
-      <!-- Os produtos serão carregados aqui via JavaScript -->
-    </div>
-  </main>
+  <!-- Menu de Navegação Superior -->
+  <nav class="nav-bar">
+    <button class="nav-btn active" onclick="mudarAba('catalogo')">🛒 Catálogo</button>
+    <button class="nav-btn" onclick="mudarAba('clientes')">👥 Clientes</button>
+    <button class="nav-btn" onclick="mudarAba('admin')">⚙️ Gestão / Admin</button>
+  </nav>
 
-  <!-- Carrinho / Contato -->
-  <footer class="footer">
-    <button class="btn-whatsapp" onclick="enviarWhatsapp()">💬 Fazer Pedido via WhatsApp</button>
-  </footer>
+  <!-- CONTEÚDO: CATÁLOGO -->
+  <div id="aba-catalogo" class="container">
+    <div class="categorias-scroll" id="lista-categorias">
+      <!-- Categorias dinâmicas injetadas via JS -->
+    </div>
+
+    <h2 class="section-title" id="titulo-categoria">Todos os Produtos</h2>
+    <div id="produtos" class="grid-produtos">
+      <!-- Produtos carregados via JS -->
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: CLIENTES & HISTÓRICO VITALÍCIO -->
+  <div id="aba-clientes" class="container hidden">
+    <div class="client-panel">
+      <h2 class="section-title">Cadastrar Novo Cliente</h2>
+      <div class="form-group">
+        <label>Nome Completo:</label>
+        <input type="text" id="cli-nome" placeholder="Ex: Maria Silva">
+      </div>
+      <div class="form-group">
+        <label>Telefone / WhatsApp:</label>
+        <input type="text" id="cli-tel" placeholder="Ex: (11) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label>Endereço (Opcional):</label>
+        <input type="text" id="cli-end" placeholder="Rua, Número, Bairro">
+      </div>
+      <button class="btn-primary" onclick="salvarCliente()">Salvar Cliente</button>
+    </div>
+
+    <div class="client-panel">
+      <h2 class="section-title">Lista de Clientes & Histórico</h2>
+      <div id="lista-clientes-container">
+        <!-- Clientes listados aqui -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: GESTÃO / ADMIN (PRODUTOS & CATEGORIAS) -->
+  <div id="aba-admin" class="container hidden">
+    <div class="admin-panel">
+      <h2 class="section-title">Gerir Categorias</h2>
+      <div class="form-group">
+        <label>Nova Categoria:</label>
+        <input type="text" id="nova-cat-nome" placeholder="Ex: Perfume">
+      </div>
+      <button class="btn-primary" onclick="adicionarCategoria()">Adicionar Categoria</button>
+    </div>
+
+    <div class="admin-panel">
+      <h2 class="section-title">Adicionar Produto</h2>
+      <div class="form-group">
+        <label>Nome do Produto:</label>
+        <input type="text" id="prod-nome" placeholder="Ex: Batom Matte">
+      </div>
+      <div class="form-group">
+        <label>Categoria:</label>
+        <select id="prod-cat">
+          <!-- Opções preenchidas via JS -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Preço (R$):</label>
+        <input type="number" id="prod-preco" placeholder="65.00">
+      </div>
+      <button class="btn-primary" onclick="adicionarProduto()">Salvar Produto</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
